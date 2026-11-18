@@ -1,0 +1,51 @@
+# Visual Studio Code
+.vscode/
+*.suo
+*.user
+*.userosscache
+*.sln.docstates
+
+# .NET Core / Build folders
+bin/
+obj/
+[Bb]in/
+[Oo]bj/
+
+# Visual Studio diagnostic files
+*.aps
+*.ilk
+*.forces
+*.pdb
+*.cache
+*.opendb
+*.opensdf
+ipch/
+*.routing
+*.lock
+
+# Build results
+[Dd]ebug/
+[Rr]elease/
+x64/
+x86/
+build/
+bld/
+
+# User-specific files
+*.rsuser
+*.suo
+*.user
+*.userosscache
+*.sln.docstates
+
+# NuGet Packages
+*.nupkg
+*.snupkg
+# As pastas packages locais (caso não use package reference global)
+[Pp]ackages/
+*.nuget.props
+*.nuget.targets
+
+# Arquivos do Sistema Operacional
+.DS_Store
+Thumbs.db
