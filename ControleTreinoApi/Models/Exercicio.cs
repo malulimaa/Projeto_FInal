@@ -8,7 +8,7 @@ public class Exercicio
     public int Id { get; set; }
 
     [Required(ErrorMessage = "O nome do exercício é obrigatório.")]
-    [Range(2, 60, ErrorMessage = "O nome do exercício deve ter entre 2 a 60 caracteres.")]
+    [StringLength(60, MinimumLength = 2, ErrorMessage = "O nome do exercício deve ter entre 2 a 60 caracteres.")]
     public required string Nome { get; set; }
     public required string? Descricao { get; set; }
     [Required(ErrorMessage = "O grupo muscular é obrigatório.")]
