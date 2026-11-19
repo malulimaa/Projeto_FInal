@@ -8,22 +8,41 @@ public class AppDbContext : DbContext
     public AppDbContext(DbContextOptions<AppDbContext> options) : base(options)
     {
     }
-
     protected override void OnModelCreating(ModelBuilder mb)
     {
-        // E-mail único 
+        // Usuário 
         mb.Entity<Usuario>().HasIndex(u => u.Email).IsUnique();
         mb.Entity<Usuario>().Property(u => u.Email).HasMaxLength(200);
         mb.Entity<Usuario>().Property(u => u.Nome).HasMaxLength(100);
 
-        // Excluir treino NÃO apaga as sessões: elas ficam com TreinoId = null
+        // A ordem das séries é única dentro do treino
+        mb.Entity<TreinoItem>()
+            .HasIndex(i => new { i.TreinoId, i.Ordem })
+            .IsUnique();
+
+        // Excluir o treino apaga só os itens do plano
+        mb.Entity<TreinoItem>()
+            .HasOne(i => i.Treino)
+            .WithMany()
+            .HasForeignKey(i => i.TreinoId)
+            .OnDelete(DeleteBehavior.Cascade);
+
+        // Exercício usado em treino NÃO pode ser excluído
+        mb.Entity<TreinoItem>()
+            .HasOne(i => i.Exercicio)
+            .WithMany()
+            .HasForeignKey(i => i.ExercicioId)
+            .OnDelete(DeleteBehavior.Restrict);
+
+        // Sessão e registros (a execução) 
+        // Excluir treino NÃO apaga as sessões: TreinoId vira null
         mb.Entity<Sessao>()
             .HasOne(s => s.Treino)
             .WithMany()
             .HasForeignKey(s => s.TreinoId)
             .OnDelete(DeleteBehavior.SetNull);
 
-        // Excluir sessão apaga os registros dela
+        // Excluir a sessão apaga os registros dela
         mb.Entity<RegistroSerieExecutada>()
             .HasOne(r => r.Sessao)
             .WithMany()
