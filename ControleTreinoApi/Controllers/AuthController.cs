@@ -1,0 +1,32 @@
+using ControleTreinoApi.Dtos;
+using ControleTreinoApi.Exceptions;
+using ControleTreinoApi.Services;
+using Microsoft.AspNetCore.Mvc;
+
+namespace ControleTreinoApi.Controllers;
+
+[ApiController]
+[Route("api/auth")]
+public class AuthController(IUsuarioService usuarioService) : ControllerBase
+{
+    /// <summary>Cria a conta de uma nova usuária.</summary>
+    /// <response code="201">Conta criada.</response>
+    /// <response code="400">Dados inválidos (o campo é apontado na resposta).</response>
+    /// <response code="409">Já existe uma conta com este e-mail.</response>
+    [HttpPost("cadastro")]
+    [ProducesResponseType(typeof(UsuarioResponse), StatusCodes.Status201Created)]
+    [ProducesResponseType(typeof(ValidationProblemDetails), StatusCodes.Status400BadRequest)]
+    [ProducesResponseType(typeof(ProblemDetails), StatusCodes.Status409Conflict)]
+    public async Task<IActionResult> Cadastrar(CadastroRequest request)
+    {
+        try
+        {
+            var usuario = await usuarioService.CadastrarAsync(request);
+            return StatusCode(StatusCodes.Status201Created, usuario);
+        }
+        catch (EmailJaCadastradoException ex)
+        {
+            return Conflict(new ProblemDetails { Title = ex.Message, Status = 409 });
+        }
+    }
+}

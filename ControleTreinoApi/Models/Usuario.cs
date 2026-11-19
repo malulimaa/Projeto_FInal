@@ -6,16 +6,8 @@ namespace ControleTreinoApi.Models;
 public class Usuario
 {
     public int Id {get; set;}
-
-    [Required(ErrorMessage = "O nome é obrigatório.")]
-    [MaxLength(100, ErrorMessage = "O nome não pode ter mais de 100 caracteres.")]
-    public required string Nome {get; set;}
-    
-    [Required(ErrorMessage = "O email é obrigatório.")]
-    [EmailAddress(ErrorMessage = "O email é inválido.")]
-    public required string Email {get; set;}
-
-    [Required]  
+    public string Nome {get; set;} = string.Empty;
+    public string Email {get; set;} = string.Empty; 
     [JsonIgnore]
-    public required string SenhaHash {get; set;}
+    public string SenhaHash {get; set;} = string.Empty;
 }
