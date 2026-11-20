@@ -29,4 +29,25 @@ public class AuthController(IUsuarioService usuarioService) : ControllerBase
             return Conflict(new ProblemDetails { Title = ex.Message, Status = 409 });
         }
     }
+
+    /// <summary>Autentica a usuária e devolve um token.</summary>
+    /// <response code="200">Token gerado.</response>
+    /// <response code="400">Dados inválidos.</response>
+    /// <response code="401">E-mail ou senha inválidos.</response>
+    [HttpPost("login")]
+    [ProducesResponseType(typeof(LoginResponse), StatusCodes.Status200OK)]
+    [ProducesResponseType(typeof(ValidationProblemDetails), StatusCodes.Status400BadRequest)]
+    [ProducesResponseType(typeof(ProblemDetails), StatusCodes.Status401Unauthorized)]
+    public async Task<IActionResult> Login(LoginRequest request)
+    {
+        try
+        {
+            var resposta = await usuarioService.LoginAsync(request);
+            return Ok(resposta);
+        }
+        catch (CredenciaisInvalidasException ex)
+        {
+            return Unauthorized(new ProblemDetails { Title = ex.Message, Status = 401 });
+        }
+    }
 }
