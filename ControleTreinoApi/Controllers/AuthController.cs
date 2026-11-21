@@ -1,6 +1,8 @@
 using ControleTreinoApi.Dtos;
 using ControleTreinoApi.Exceptions;
+using ControleTreinoApi.Extensions;
 using ControleTreinoApi.Services;
+using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Mvc;
 
 namespace ControleTreinoApi.Controllers;
@@ -50,4 +52,13 @@ public class AuthController(IUsuarioService usuarioService) : ControllerBase
             return Unauthorized(new ProblemDetails { Title = ex.Message, Status = 401 });
         }
     }
+
+    /// <summary>Rota de teste: devolve o Id da usuária logada.</summary>
+    /// <response code="200">Id da usuária lido do token.</response>
+    /// <response code="401">Token ausente ou inválido.</response>
+    [Authorize]
+    [HttpGet("eu")]
+    [ProducesResponseType(StatusCodes.Status200OK)]
+    [ProducesResponseType(StatusCodes.Status401Unauthorized)]
+    public IActionResult Eu() => Ok(new { usuarioId = User.ObterUsuarioId() });
 }
